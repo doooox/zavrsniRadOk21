@@ -17,7 +17,39 @@
     <link href="styles/blog.css" rel="stylesheet">
 </head>
 <body>
-    <?php include('templates/header.php');?>
+    <?php include('templates/header.php');
+
+        if(isset($_POST['submit'])){
+
+            $title = $_POST['title'];
+            $body = $_POST['body'];
+            $author = $_POST['author'];
+            $createdAt = date("Y-m-d h:i");
+
+            $sql = "INSERT INTO posts (title, body, author, created_at) VALUES ('$title', '$body', '$author', '$createdAt')";
+            $statement = $connection->prepare($sql);
+            $statement->execute();
+            header("Location:/posts.php");
+        }
+    
+    
+    ?>
+
+    <form action="create-post.php" method="post">
+
+            <li><label for="title">Enter post title:</label></li>
+            <li><input type="text" name="title" id="title" placeholder="Post title..." required></li>
+
+            <li><label for="body">Enter post content:</label></li>
+            <li><textarea name="body" id="" cols="30" rows="10" required placeholder="Post content..." ></textarea></li>
+
+            <li><label for="author">Enter post author:</label></li>
+            <li><input type="text" name="author" id="author" placeholder="Post author..." required></li>
+            
+            <li><button type="submit" name="submit">Submit</button></li>
+    </form>
+
+
     <?php include('templates/sidebar.php');?>
     <?php include('templates/footer.php');?>
 </body>
