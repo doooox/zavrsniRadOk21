@@ -1,20 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
 <head>
-
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="../../../../favicon.ico">
-
     <title>Create post</title>
-
-    <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
-
-    <!-- Custom styles for this template -->
-    <link href="styles/blog.css" rel="stylesheet">
 </head>
 <body>
     <?php include('templates/header.php');
@@ -26,31 +11,51 @@
             $author = $_POST['author'];
             $createdAt = date("Y-m-d h:i");
 
-            $sql = "INSERT INTO posts (title, body, author, created_at) VALUES ('$title', '$body', '$author', '$createdAt')";
+            $sql = "INSERT INTO posts (title, body, author_id, created_at) VALUES ('$title', '$body', '$author', '$createdAt')";
             $statement = $connection->prepare($sql);
             $statement->execute();
             header("Location:/posts.php");
         }
     
+        $sql = "SELECT id, first_name, last_name, gender FROM authors";
+        $statement = $connection->prepare($sql);
+        $statement->execute();
+        $statement->setFetchMode(PDO::FETCH_ASSOC);
+        $authors = $statement->fetchAll();
     
     ?>
 
-    <form action="create-post.php" method="post">
+    <main role="main" class="container">
 
-            <li><label for="title">Enter post title:</label></li>
-            <li><input type="text" name="title" id="title" placeholder="Post title..." required></li>
+    <div class="row">
+        <div class="col-sm-8 blog-main">
+            <div class="blog-post">
+                <form action="create-post.php" method="post">
 
-            <li><label for="body">Enter post content:</label></li>
-            <li><textarea name="body" id="" cols="30" rows="10" required placeholder="Post content..." ></textarea></li>
+                    <li><label for="title">Enter post title:</label></li>
+                    <li><input type="text" name="title" id="title" placeholder="Post title..." required></li>
 
-            <li><label for="author">Enter post author:</label></li>
-            <li><input type="text" name="author" id="author" placeholder="Post author..." required></li>
-            
-            <li><button type="submit" name="submit">Submit</button></li>
-    </form>
+                    <li><label for="body">Enter post content:</label></li>
+                    <li><textarea name="body" id="" cols="30" rows="10" required placeholder="Post content..." ></textarea></li>
 
-
-    <?php include('templates/sidebar.php');?>
+                    <li><label for="author">Select post author:</label></li>
+                    <li>
+                        <select class="<?php echo $author['gender'] ?>" name="author" placeholder="Select Author" >
+                            <?php foreach($authors as $author) { ?> 
+                                <option  class="<?php echo $author['gender'] ?>" value="<?php echo $author['id'] ?>">
+                                    <?php echo ($author['first_name']) . ' ' . ($author['last_name']); ?>
+                                </option>
+                            <?php } ?>
+                        </select>
+                    </li>
+                    <br>
+                    <li><button type="submit" name="submit">Submit</button></li>
+                </form>
+            </div>
+        </div><!-- /.blog-main -->
+        <?php include('templates/sidebar.php'); ?>
+    </div><!-- /.row -->
+</main><!-- /.container -->
     <?php include('templates/footer.php');?>
 </body>
 </html>

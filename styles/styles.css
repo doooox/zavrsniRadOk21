@@ -30,3 +30,13 @@ h6{
     text-decoration: underline;
     font-size: 1.2rem;
 }
+form li{
+    list-style-type: none;
+}
+.male {
+    color: blue;
+}
+
+.female {
+    color: rgb(204, 122, 158);
+}
